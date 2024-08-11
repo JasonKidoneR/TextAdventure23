@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheet.css">
+    <title>TextAdventure</title>
+</head>
+
+<body>
+    <h1>gameStart</h1>
+
+    <div class="startinfos">
+        <ul>
+            <li>Zum Starten des Adventure Bitte Startbuttom anklicken!</li>
+            <br>
+            <ul>
+                <li>Startzeit: <span id="startTime"></span></li>
+                <br>
+                <li>Spielzeit: <span id="playTime"></span></li>
+                <br>
+                <li>Leben: <span id="lives">5</span></li>
+            </ul>
+            <br>
+            <br>
+            <li>Spiel startet, einen Moment bitte........<span id="story"></span></li>
+        </ul>
+    </div>
+
+    <div style="display: flex; justify-content: center;">
+        <button id="startButton"
+            style="display: inline-block; padding: 10px 20px; border: 2px solid black; cursor: pointer; margin-top: 10px; transition: 0.5s;">Starte
+            das Textabenteuer</button>
+    </div>
+
+    <p id="story" class="outputText"></p>
+    <p id="gameText" class="outputText"></p>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <p>Willkommen im Textabenteuer! Du stehst vor einer Weggabelung. Wähle eine Richtung:</p>
+            <button onclick="chooseDirection('links')">Links</button>
+            <button onclick="chooseDirection('rechts')">Rechts</button>
+        </div>
+    </div>
+
+    <!-- New Modal for Direction Choice -->
+    <div id="directionModal" class="modal">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <p id="directionText"></p>
+            <button onclick="showLastOutput()">Zeige letzte Ausgabe</button>
+        </div>
+    </div>
+
+    <!-- Modal for Last Output -->
+    <div id="lastOutputModal" class="modal">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <p id="lastOutputText"></p>
+        </div>
+    </div>
+
+    <!-- Modal for Decision -->
+    <div id="decisionModal" class="modal">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <p id="decisionText"></p>
+        </div>
+    </div>
+
+    <!-- Modal for Variablen -->
+    <div id="variablenModal" class="modal">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <p id="variablenText"></p>
+        </div>
+    </div>
+
+    <script src="/skript.js"></script>
+</body>
+
+</html>

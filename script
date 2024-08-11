@@ -1,0 +1,165 @@
+class VariablenGenerator {
+    constructor() {
+        this.counter = 0;
+    }
+
+    generiereVariablen() {
+        this.counter += 1;
+        this[`variable${this.counter * 2 - 1}`] = `Wert${this.counter * 2 - 1}`;
+        this[`variable${this.counter * 2}`] = `Wert${this.counter * 2}`;
+        console.log(this[`variable${this.counter * 2 - 1}`], this[`variable${this.counter * 2}`]);
+    }
+
+    getVariablen() {
+        let variablen = "";
+        for (let i = 1; i <= this.counter * 2; i++) {
+            variablen += `variable${i}: ${this[`variable${i}`]}<br>`;
+        }
+        return variablen;
+    }
+}
+
+class GameText {
+    constructor() {
+        this.texts = [];
+        this.counter = 0;
+    }
+
+    addText(key, text) {
+        this.counter += 1;
+        this.texts.push({ id: this.counter, key: key, text: text });
+    }
+
+    getTextByKey(key) {
+        return this.texts.find(t => t.key === key)?.text || "Text nicht gefunden";
+    }
+
+    getAllTexts() {
+        return this.texts;
+    }
+}
+
+var startTime;
+var newWindow;
+var lastQuestion;
+var lives = 5;
+var gameInterval;
+var gameText = new GameText();
+gameText.addText("links", "Du gehst nach links und siehst einen schönen See.");
+gameText.addText("rechts", "Du gehst nach rechts und entdeckst einen geheimen Pfad.");
+gameText.addText("see", "Du siehst einen wunderschönen See. Möchtest du schwimmen oder weitergehen?");
+gameText.addText("hoehle", "Du entdeckst eine dunkle Höhle. Möchtest du hineingehen oder weitergehen?");
+gameText.addText("wald", "Du betrittst einen dichten Wald. Möchtest du weiter erkunden oder zurückgehen?");
+gameText.addText("berg", "Du stehst vor einem hohen Berg. Möchtest du hinaufklettern oder weitergehen?");
+var lastInput = "";
+var variablenGenerator = new VariablenGenerator();
+
+document.getElementById("startButton").addEventListener("click", startAdventure);
+
+function startAdventure() {
+    startTime = new Date();
+    document.getElementById("startTime").innerHTML = startTime.toLocaleTimeString();
+    document.getElementById("story").innerHTML = "Dein Abenteuer beginnt jetzt...";
+    var modal = document.getElementById("myModal");
+    modal.style.display = "block";
+    keepWindowOnTop();
+    startInterval();
+    nextDecision("links", "rechts");
+}
+
+function nextDecision(option1, option2) {
+    var modal = document.getElementById("myModal");
+    modal.style.display = "none";
+    var decisionModal = document.getElementById("decisionModal");
+    var decisionText = document.getElementById("decisionText");
+
+    decisionText.innerHTML = "Wähle eine Richtung: <br><button onclick='chooseDirection(\"" + option1 + "\")'>" + option1 + "</button> <button onclick='chooseDirection(\"" + option2 + "\")'>" + option2 + "</button>";
+    decisionModal.style.display = "block";
+}
+
+function chooseDirection(direction) {
+    var decisionModal = document.getElementById("decisionModal");
+    decisionModal.style.display = "none";
+    var directionText = document.getElementById("directionText");
+
+    if (direction === "links") {
+        directionText.innerHTML = gameText.getTextByKey("links");
+        lastInput = gameText.getTextByKey("links");
+    } else if (direction === "rechts") {
+        directionText.innerHTML = gameText.getTextByKey("rechts");
+        lastInput = gameText.getTextByKey("rechts");
+    }
+
+    var modal = document.getElementById("directionModal");
+    modal.style.display = "block";
+
+    setTimeout(function() {
+        modal.style.display = "none";
+        nextDecision("see", "hoehle");
+    }, 3000);
+
+    // Generiere neue Variablen bei jeder Entscheidung
+    variablenGenerator.generiereVariablen();
+    showVariablen();
+}
+
+function showVariablen() {
+    var variablenModal = document.getElementById("variablenModal");
+    var variablenText = document.getElementById("variablenText");
+
+    variablenText.innerHTML = variablenGenerator.getVariablen();
+    variablenModal.style.display = "block";
+}
+
+function showLastOutput() {
+    var directionModal = document.getElementById("directionModal");
+    directionModal.style.display = "none";
+    var lastOutputModal = document.getElementById("lastOutputModal");
+    var lastOutputText = document.getElementById("lastOutputText");
+
+    lastOutputText.innerHTML = lastInput;
+    lastOutputModal.style.display = "block";
+}
+
+// Close the modal when the user clicks on <span> (x)
+var spans = document.getElementsByClassName("close");
+for (var i = 0; i < spans.length; i++) {
+    spans[i].onclick = function() {
+        var modals = document.getElementsByClassName("modal");
+        for (var j = 0; j < modals.length; j++) {
+            modals[j].style.display = "none";
+        }
+    }
+}
+
+// Close the modal when the user clicks anywhere outside of the modal
+window.onclick = function(event) {
+    var modals = document.getElementsByClassName("modal");
+    for (var i = 0; i < modals.length; i++) {
+        if (event.target == modals[i]) {
+            modals[i].style.display = "none";
+        }
+    }
+}
+
+// Function to keep the window on top
+function keepWindowOnTop() {
+    setInterval(function() {
+        window.focus();
+    }, 1000);
+}
+
+// Function to start an interval that updates the UI
+function startInterval() {
+    setInterval(function() {
+        var currentTime = new Date();
+        var time = currentTime.getHours() + ":" + currentTime.getMinutes() + ":" + currentTime.getSeconds();
+        document.getElementById("story").innerHTML = "Aktuelle Zeit: " + time;
+
+        var playTime = Math.floor((currentTime - startTime) / 1000);
+        var seconds = playTime % 60;
+        var minutes = Math.floor(playTime / 60) % 60;
+        var hours = Math.floor(playTime / 3600);
+        document.getElementById("playTime").innerHTML = "Spielzeit: " + hours + " Stunde(n) " + minutes + " Minute(n) " + seconds + " Sekunde(n)";
+    }, 1000);
+}

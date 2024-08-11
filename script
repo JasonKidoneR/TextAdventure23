@@ -2,8 +2,11 @@ class VariablenGenerator {
     constructor() {
         this.counter = 0;
     }
-
-    generiereVariablen() {
+                                 
+                                 
+                                 //generiert um für Text immer bei jeder weitere Abfrage zwei Zeilen im TextAdventure weitere zu gehen
+                                 
+    generiereVariablen() {        
         this.counter += 1;
         this[`variable${this.counter * 2 - 1}`] = `Wert${this.counter * 2 - 1}`;
         this[`variable${this.counter * 2}`] = `Wert${this.counter * 2}`;
